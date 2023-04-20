@@ -27,7 +27,7 @@ class ApiOverview(APIView):
         return Response(api_urls)
     
 class ParkingDetection(APIView):
-    def get(self, request):
+    def get(self, request,pk):
         # Main()
-        ans = CVLogic()
+        ans = CVLogic(sec=pk)
         return JsonResponse({"ans":ans});

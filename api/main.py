@@ -3,10 +3,11 @@ import cvzone
 import cv2
 import numpy as np
 
-def CVLogic():
+def CVLogic(sec):
     
     # Video feed
-    cap = cv2.VideoCapture(r'/home/ikshan/Ikshan/projects/Car_Parking/api/carPark.mp4')
+    # r'/home/ikshan/Ikshan/projects/Car_Parking/api/carPark.mp4'
+    cap = cv2.VideoCapture("api/carPark.mp4")
     
     with open(r'/home/ikshan/Ikshan/projects/Car_Parking/api/CarParkPos', 'rb') as f:
         posList = pickle.load(f)
@@ -44,10 +45,26 @@ def CVLogic():
         #to return count of a parking space -> return spaceCounter
 
     while True:
-    
-        # if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
-        #     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        
+        #keep the loop infintite
+        
+        if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
+            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        
+        amount_of_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT) #679
+        print(amount_of_frames)
+        frame_number = (amount_of_frames/30)*sec
+        #there are 679 frames in a 30 second video
+        #therefore there are approx 22 frames in a second
+
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number-1)
+
         success, img = cap.read()
+        print("success = ",success)
+        print(img)
+        if img is None:
+            print("Image is none")
+            return "error: (-215:Assertion failed) !_src.empty() in function 'cvtColor"
         imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         imgBlur = cv2.GaussianBlur(imgGray, (3, 3), 1)
         imgThreshold = cv2.adaptiveThreshold(imgBlur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
