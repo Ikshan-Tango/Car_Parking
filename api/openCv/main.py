@@ -7,9 +7,9 @@ def CVLogic(sec):
     
     # Video feed
     # r'/home/ikshan/Ikshan/projects/Car_Parking/api/carPark.mp4'
-    cap = cv2.VideoCapture("api/carPark.mp4")
+    cap = cv2.VideoCapture("api/openCv/carPark.mp4")
     
-    with open(r'/home/ikshan/Ikshan/projects/Car_Parking/api/CarParkPos', 'rb') as f:
+    with open(r'/home/ikshan/Ikshan/projects/Car_Parking/api/openCv/CarParkPos', 'rb') as f:
         posList = pickle.load(f)
     
     width, height = 107, 48

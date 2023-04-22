@@ -3,19 +3,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
 #import JsonResponse
 from django.http import JsonResponse
 
-import pickle
-import cv2
-import numpy as np
-import cvzone
-
-from api.parkingSpacePicker import Main
-from api.main import CVLogic
+from api.openCv.parkingSpacePicker import Main
+from api.openCv.main import CVLogic
 # Create your views here.
 
+from .serializers import *
+
 class ApiOverview(APIView):
+    permission_classes = (IsAuthenticated, )
     def get(self, request):
         api_urls = {
             'List':'/parking-list/',
@@ -25,6 +25,37 @@ class ApiOverview(APIView):
             'Delete':'/parking-delete/<str:pk>/',
         }
         return Response(api_urls)
+    
+class Register(APIView):
+    def post(self,request):
+        data = request.data
+        user_serializer = UserSerializer(data = data)
+
+        password = request.data['password']
+        password = make_password(password=password) #it is used to hash the incoming password
+
+        #if valid then make the user and assign a token
+        if user_serializer.is_valid():
+            user  = user_serializer.save(password=password)
+
+        #else raise an error 
+        else:
+            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        #return the response
+
+        return Response({
+            "user": user_serializer.data,
+            "message":"user created successfully!"
+        }, status=status.HTTP_201_CREATED)
+    
+class SignIn(APIView):
+    def post(self, request):
+        print(request.data)
+        data = request.data
+        #match if the corresponsding data exists already in the db then sign in and provide with a token
+        return Response(request.data)
+
     
 class ParkingDetection(APIView):
     def get(self, request,pk):
