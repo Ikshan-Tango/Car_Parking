@@ -52,7 +52,7 @@ def CVLogic(sec):
             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         
         amount_of_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT) #679
-        print(amount_of_frames)
+        # print(amount_of_frames)
         frame_number = (amount_of_frames/30)*sec
         #there are 679 frames in a 30 second video
         #therefore there are approx 22 frames in a second
@@ -60,8 +60,8 @@ def CVLogic(sec):
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number-1)
 
         success, img = cap.read()
-        print("success = ",success)
-        print(img)
+        # print("success = ",success)
+        # print(img)
         if img is None:
             print("Image is none")
             return "error: (-215:Assertion failed) !_src.empty() in function 'cvtColor"

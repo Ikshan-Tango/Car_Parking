@@ -26,6 +26,13 @@ class ApiOverview(APIView):
         }
         return Response(api_urls)
     
+class HomeView(APIView):
+     
+   permission_classes = (IsAuthenticated, )
+   def get(self, request):
+        content = {'message': 'Welcome to the JWT Authentication page using React Js and Django!'}
+        return Response(content)
+    
 class Register(APIView):
     def post(self,request):
         data = request.data
@@ -55,6 +62,18 @@ class SignIn(APIView):
         data = request.data
         #match if the corresponsding data exists already in the db then sign in and provide with a token
         return Response(request.data)
+    
+class LogoutView(APIView):
+     permission_classes = (IsAuthenticated,)
+     def post(self, request):
+          
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"message":"Token deleted successfully!"},status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error":e},status=status.HTTP_400_BAD_REQUEST)
 
     
 class ParkingDetection(APIView):
